@@ -20,12 +20,21 @@ class Size:
         else:
             return self.size
 
-    def hypeboost(self, name):
-        json_file = open("converters/hypeboost.json")
+    def restocks_hypeboost(self):
+        json_file = open("converters/restocks_hypeboost.json")
         sizes = json.load(json_file)
 
-        for size in sizes["Nike"]:
-            sizes["Nike"][size] = sizes["Nike"][size].replace("Â˝", "½")
+        for size in sizes["Y"]:
+            sizes["Y"][size] = sizes["Y"][size].replace("Â˝", "½")
+
+        for size in sizes["W"]:
+            sizes["W"][size] = sizes["W"][size].replace("Â˝", "½")
+
+        for size in sizes["M"]:
+            sizes["M"][size] = sizes["M"][size].replace("Â˝", "½")
+
+        for size in sizes["C"]:
+            sizes["C"][size] = sizes["C"][size].replace("Â˝", "½")
 
         for size in sizes["New_balance"]:
             sizes["New_balance"][size] = sizes["New_balance"][size].replace("Â˝", "½")
@@ -39,41 +48,59 @@ class Size:
                 sizes["Adidas"][size] = sizes["Adidas"][size].replace("â…“", "⅓")
                 t = 0
 
-        if "new balance" in name:
+        if "-" in self.sku:
+            if "Y" in self.size:
+                return sizes["Y"][self.size]
+            elif "W" in self.size:
+                if len(self.sku) == 11:
+                    return sizes["UGG"][self.size]
+                else:
+                    return sizes["W"][self.size]
+            elif "C" in self.size:
+                return sizes["C"][self.size]
+            else:
+                return sizes["M"][self.size]
+
+        if "BB" in self.sku or "GSB" in self.sku:
             return sizes["New_balance"][self.size]
-        elif "adidas" in name:
-            return sizes["Adidas"][self.size]
-        elif "nike" in name or "jordan" in name:
-            return sizes["Nike"][self.size]
-        elif "ugg" in name:
-            return sizes["UGG"][self.size]
+
+        return sizes["Adidas"][self.size]
 
     def klekt(self):
         if "W" in self.size:
             return "US" + self.size.replace("W", "")
-        elif "GSB" in self.sku:
-            return self.size.replace("Y", "")
         elif "Y" in self.size:
             return self.size
         elif "C" in self.size:
             return self.size
+        elif "GSB" in self.sku:
+            return self.size.replace("Y", "")
         else:
             return "US" + self.size
 
-    def wethenew(self, name):
+    def wethenew(self):
         json_file = open("converters/wethenew.json")
         sizes = json.load(json_file)
 
-        if "new balance" in name:
-            return sizes["New_balance"][self.size]
-        elif "adidas" in name:
-            return sizes["Adidas"][self.size]
-        elif "nike" in name or "jordan" in name:
-            return sizes["Nike"][self.size]
-        elif "ugg" in name:
-            return sizes["UGG"][self.size]
+        if "-" in self.sku:
+            if "Y" in self.size:
+                return sizes["Y"][self.size]
+            elif "W" in self.size:
+                if len(self.sku) == 11:
+                    return sizes["UGG"][self.size]
+                else:
+                    return sizes["W"][self.size]
+            elif "C" in self.size:
+                return sizes["C"][self.size]
+            else:
+                return sizes["M"][self.size]
 
-    def sneakit(self, name):
+        if "BB" in self.sku or "GSB" in self.sku:
+            return sizes["New_balance"][self.size]
+
+        return sizes["Adidas"][self.size]
+
+    def sneakit(self):
         json_file = open("converters/sneakit.json")
         sizes = json.load(json_file)
 
@@ -86,11 +113,30 @@ class Size:
                 sizes["Adidas"][size] = sizes["Adidas"][size].replace("â…“", "⅓")
                 t = 0
 
-        if "new balance" in name:
+        if "-" in self.sku:
+            if "Y" in self.size:
+                return sizes["Y"][self.size]
+            elif "W" in self.size:
+                if len(self.sku) == 11:
+                    return sizes["UGG"][self.size]
+                else:
+                    return sizes["W"][self.size]
+            elif "C" in self.size:
+                return sizes["C"][self.size]
+            else:
+                return sizes["M"][self.size]
+
+        if "BB" in self.sku or "GSB" in self.sku:
             return sizes["New_balance"][self.size]
-        elif "adidas" in name:
-            return sizes["Adidas"][self.size]
-        elif "nike" in name or "jordan" in name:
-            return sizes["Nike"][self.size]
-        elif "ugg" in name:
-            return sizes["UGG"][self.size]
+
+        return sizes["Adidas"][self.size]
+
+    def sizes(self):
+        return [
+            self.stockx(),
+            self.alias(),
+            self.restocks_hypeboost(),
+            self.klekt(),
+            self.wethenew(),
+            self.sneakit(),
+        ]

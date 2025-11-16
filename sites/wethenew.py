@@ -1,95 +1,54 @@
 import time
 
-from add import get_settings
-
 
 class Wethenew:
-    def __init__(self, username, password, p):
-        self.eur = get_settings("eur_rate")
-        self.p = p
-        while self.__log_in(username, password) == False:
-            self.__log_in(username, password)
 
-    def __log_in(self, username, password):
-        # Logs into wethenew account
-        self.p.goto("https://sell.wethenew.com/login", timeout=0)
-        self.p.wait_for_load_state("load")
-        time.sleep(3)
-        try:
-            self.p.locator(
-                'xpath=//button[@id="didomi-notice-agree-button"]'
-            ).first.click(force=True, click_count=2)
-            time.sleep(2)
-        except:
-            pass
-        try:
-            self.p.locator('xpath=//input[@type="email"]').type(username)
-            time.sleep(1)
-            self.p.locator('xpath=//input[@type="password"]').type(password)
-            time.sleep(1)
-            self.p.locator('xpath=//button[@type="submit"]').click()
-            time.sleep(2)
-        except:
-            pass
-        print("Logged into Wethenew account")
-        return True
+    def __init__(self, sku, size, page):
+        self.sku = sku
+        self.size = size
+        self.page = page
 
-    def __get_product(self, sku):
+    def __get_product(self):
         # Gets product page
 
         try:
-            self.p.goto("https://sell.wethenew.com/listing", timeout=0)
-            self.p.wait_for_load_state("load")
-            self.p.locator('xpath=//input[@type="search"]').type(sku)
-            self.p.wait_for_load_state("load")
+            self.page.goto("https://sell.wethenew.com/listing", timeout=0)
+            self.page.wait_for_load_state("load")
+            self.page.locator('xpath=//input[@type="search"]').type(self.sku)
+            self.page.wait_for_load_state("load")
             time.sleep(2)
-            self.p.locator(
+            self.page.locator(
                 'xpath=//*[@id="__next"]/div/div[1]/div/div/div[3]/div/div/div/div/div/div[2]/button'
-            ).click(timeout=5000)
-            self.p.wait_for_load_state("load")
+            ).click()
+            self.page.wait_for_load_state("load")
             time.sleep(2)
             return True
         except:
-            print("Wethenew: No product found")
-            return None
+            return False
 
-    def get_price(self, sku, size):
+    def get_price(self):
         # Gets price
 
-        # Unfortunately sometimes there are more than one product page so then it won't work
-        url = self.__get_product(sku)
-        if url == None:
-            return 0
+        # Sometimes there are more than one product page
+        self.__get_product()
 
-        try:
+        try:  # Cos jest nie tak
+            print("self size:" + self.size)
+            print("WTB\n{}".format(self.size))
+            print("WTB{}".format(self.size))
+            print(self.page.locator('xpath=//li[@role="button"]').all())
             try:
-                self.p.locator('xpath=//li[@role="button"]', has_text=size).click(
-                    timeout=5000, force=True
-                )
+                self.page.locator(
+                    'xpath=//li[@role="button"]', has_text=self.size
+                ).click()
             except:
-                self.p.locator(
-                    'xpath=//li[@role="button"]', has_text="WTB\n{}".format(size)
-                ).click(timeout=5000, force=True)
+                self.page.locator(
+                    'xpath=//li[@role="button"]', has_text="WTB\n{}".format(self.size)
+                ).click()
             time.sleep(1)
-            price = self.__get_PLN(
-                float(
-                    self.p.locator(
-                        "xpath=/html/body/div[6]/div/div/div[2]/form/fieldset[4]/div[2]/div[2]/span"
-                    )
-                    .inner_text()
-                    .replace("€", "")
-                )
-                - 1
-            )
-            return price
+            price = self.page.locator(
+                'xpath=//span[@style="font-weight: 500;"]'
+            ).inner_text()
+            return price.replace("€", "")
         except:
-            return 0
-
-    def __get_PLN(self, price):
-        # Gets price in PLN after fees
-
-        try:
-            price_pln = (price / 1.2) * self.eur
-            return price_pln
-        except (TypeError, ValueError):
             return 0
