@@ -2,7 +2,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from add import captcha
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException, ElementClickInterceptedException
 import time
 
 
@@ -48,9 +48,12 @@ class Stockx:
                             By.XPATH, '//*[@id="main-container"]/div[1]/div[2]/div[3]/div/button[{}]'.format(i)).click()
                         break
                 break
-            except StaleElementReferenceException:
+            except (StaleElementReferenceException, ElementClickInterceptedException):
                 print("Click pop ups, then type anything...")
                 input()
+            except NoSuchElementException:
+                print('Probably wrong size in input Excel')
+                return False
 
     def item_info(self):
         # Gets product name, sku and price

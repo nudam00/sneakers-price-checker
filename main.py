@@ -32,7 +32,7 @@ def shoes(eur, usd, name, driv, token, scraper, stockx_fee, p):
         else:
             size = str(row['size'])
         sku = row['sku']
-        purchase = int(str(row['price']).replace(',', '.'))
+        purchase = float(str(row['price_net']).replace(',', '.'))
 
         # If same shoe as before then get saved data from earlier iteration
         if size == new_row['Size'] and sku == new_row['SKU']:
@@ -85,6 +85,7 @@ if __name__ == "__main__":
           "Women - e.g. 9W/9.5W\n"
           "Gs - e.g. 6Y/6.5Y\n"
           'Td - e.g. 2C\n'
+          "3. Write net price in PLN\n"
           '\n'
           'Write anything when you would like to start\n')
     input()
@@ -104,7 +105,7 @@ if __name__ == "__main__":
     sheets = pd.ExcelFile('input/stock.xlsx').sheet_names
 
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=True, slow_mo=300)
+        browser = p.firefox.launch(headless=False, slow_mo=300)
         page = browser.new_page()
         stealth_sync(page)
         get_playwright(get_settings('username'),

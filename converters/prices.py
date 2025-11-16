@@ -109,7 +109,7 @@ class Prices:
 
     def sneakit(self):
         # Gets price from Sneakit to PLN
-        sneakit = Sneakit(self.size_sneakit, self.sku, self.scraper)
+        sneakit = Sneakit(self.sku, self.size_sneakit, self.scraper)
         try:
             price = int(sneakit.get_price())
             price_pln = (price-25)/1.2*self.eur
@@ -122,7 +122,7 @@ class Prices:
 
     def bestPrice(self, purchase, p_stockx, p_alias, p_restocks, p_klekt, p_wethenew, p_hypeboost, p_sneakit):
         # Returns best price and site
-        margin = 0.15
+        margin = 0.1
         additional_sites = ''
         best_price = 0
         if p_stockx > p_alias:
@@ -134,14 +134,14 @@ class Prices:
         else:
             sites = 'StockX/Alias'
             best_price = p_alias
-        if p_restocks > best_price and (p_restocks-purchase)/purchase > margin:
+        if p_restocks >= best_price and (p_restocks-purchase)/purchase > margin:
             additional_sites += 'Restocks/'
-        if p_klekt > best_price and (p_klekt-purchase)/purchase > margin:
+        if p_klekt >= best_price and (p_klekt-purchase)/purchase > margin:
             additional_sites += 'Klekt/'
-        if p_wethenew > best_price and (p_wethenew-purchase)/purchase > margin:
+        if p_wethenew >= best_price and (p_wethenew-purchase)/purchase > margin:
             additional_sites += 'Wethenew/'
-        if p_hypeboost > best_price and (p_hypeboost-purchase)/purchase > margin:
+        if p_hypeboost >= best_price and (p_hypeboost-purchase)/purchase > margin:
             additional_sites += 'Hypeboost/'
-        if p_sneakit > best_price and (p_sneakit-purchase)/purchase > margin:
+        if p_sneakit >= best_price and (p_sneakit-purchase)/purchase > margin:
             additional_sites += 'Sneakit/'
         return [sites, additional_sites, best_price]

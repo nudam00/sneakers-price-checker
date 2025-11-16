@@ -51,7 +51,7 @@ A few additional functions.
 It brings the whole program together. Calls classes based on data in stock.xlsx and writes prices to prices.xlsx.
 
 ## INCOMING
-1. Sneakit
+1. Repair wethenew
 2. Best sizes based on price (will compare to StockX and Alias)
 3. StockX rewrite
 4. Whole program rewrite
