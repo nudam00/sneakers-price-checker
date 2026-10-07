@@ -17,7 +17,7 @@
 > separation of concerns. It is kept public to document the original product
 > idea and my development path—not as a recommended implementation.
 
-Companion project: [Sneakers Best Size Checker](https://github.com/nudam00/best-size-checker)
+Companion project: [Sneakers Best Size Checker](https://github.com/nudam00/sneakers-best-size-checker)
 
 ## Project context
 
