@@ -1,0 +1,11 @@
+beautifulsoup4
+cloudscraper
+lxml
+openpyxl
+pandas<2
+playwright
+playwright-stealth
+python-dotenv
+requests
+selenium
+selenium-stealth

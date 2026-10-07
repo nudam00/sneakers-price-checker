@@ -1,70 +1,92 @@
-# SneakersPriceChecker
+# Sneakers Price Checker
 
-Program which checks sneaker prices based on **sku** and **size** and writes out in PLN to the excel file. Sites which are scrapped:
+> [!WARNING]
+> **Legacy project**
+>
+> This project was built in 2022 as a personal tool for comparing estimated
+> sneaker resale payouts. It is no longer maintained and is preserved as a
+> record of an early automation project.
+>
+> Marketplace APIs, pages, authentication flows, and anti-bot protections have
+> changed since it was released. The application is therefore unlikely to work
+> without updates.
+>
+> This is a preserved historical snapshot, not an example of how I build
+> software today. The code predates my current engineering standards and lacks
+> tests, CI/CD, pre-commit checks, type checking, task automation, and modern
+> separation of concerns. It is kept public to document the original product
+> idea and my development path—not as a recommended implementation.
 
-1. StockX - prices must be in USD.
-2. Alias - prices must be in USD.
-3. Restocks - prices must be in EUR.
-4. Klekt - prices must be in EUR.
-5. WETHENEW - prices must be in EUR.
-6. Hypeboost - prices must be in EUR.
-   <br />
-   StockX ends up blocked by PerimeterX quite often, so the program will be restarted automatically and PerimeterX needs to be resolved. You also have to choose region and log in manually again.<br />
-   Written in Python using Selenium, requests and Playwright.
+Companion project: [Sneakers Best Size Checker](https://github.com/nudam00/best-size-checker)
 
-## Converters
+## Project context
 
-1. prices.py - returns prices in PLN after commission.
-2. restocks_hypeboost.json - size converter to restocks and hypeboost format size.
-3. size_converter.py - converts all sizes to fit the page.
-4. wethenew.json - size converter to wethenew size.
-   <br />
+The tool combined browser automation and HTTP requests with marketplace-specific
+adapters, sneaker-size conversion, currency and fee calculations, and Excel
+reporting. Given products, sizes, and their acquisition costs, it compared
+estimated payouts across StockX, Alias, Restocks, Klekt, WETHENEW, Hypeboost,
+and Sneakit and selected the best result.
 
-## Input
+The repository remains public for historical context.
 
-### settings.json - write your credentials on Alias and StockX fee
+## Original workflow
 
-`{"alias_username": "x", "alias_password": "x", "stockx_fee": 0.x, "wethenew_password": "x"}`
+1. Add SKUs, US sizes, and net acquisition prices in PLN to sheets in
+   `input/stock.xlsx`.
+2. Copy `input/settings.example.json` to `input/settings.json` and fill in the
+   marketplace credentials and StockX fee. The legacy Alias adapter also
+   expects third-party client values listed in `.env.example`.
+3. Run `python main.py` and complete any interactive marketplace login or
+   anti-bot checks.
+4. Review marketplace payouts and the selected best prices in
+   `output/prices.xlsx`.
 
-### stock.xlsx
+`input/settings.json` and `.env` are ignored by Git because they may contain
+credentials. Do not commit populated copies.
 
-1. Write SKU.
-2. Write size in US.
-   <br />
+## Components
 
-## Output
+- `main.py` orchestrates spreadsheet input, marketplace checks, and report
+  generation.
+- `converters/prices.py` applies the historical marketplace fees, currency
+  conversion, and best-price comparison.
+- `converters/size_converter.py` maps sizes into marketplace-specific formats.
+- `sites/` contains the individual marketplace adapters.
+- `add.py` contains the historical browser, authentication, exchange-rate, and
+  Restocks setup helpers.
 
-### prices.xslx
+## Historical setup
 
-Look at:
+The dependency list is provided for reference and is intentionally unpinned
+except for pandas, whose 2.0 release removed an API used by this project:
 
-1. StockX and Alias payouts in PLN (rounded down to tens).
-2. Best site/s.
-3. Best price rounded down to tens.
-4. Best additional sites (which are not that popular like StockX or Alias).
-   <br />
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+playwright install firefox
+cp input/settings.example.json input/settings.json
+cp .env.example .env
+python main.py
+```
 
-## Sites
+The Selenium adapter also contains a historical Windows-specific ChromeDriver
+path that must be changed for another environment. These steps document the
+original shape of the project; they do not guarantee that current marketplace
+integrations will function.
 
-1. alias.py - checks the price on Alias.
-2. restocks.py - check the price on Restocks.
-3. stockx.py - checks the price on StockX.
-4. klekt.py - check the price on Klekt.
-5. wethenew.py - check the price on WETHENEW.
-6. hypeboost.py - check the price on Hypeboost.
-   <br />
+## Known limitations
 
-## add.py
+- Selectors and undocumented endpoints are brittle and now likely outdated.
+- Authentication is interactive and may require manual anti-bot challenges.
+- The code includes broad exception handling and unbounded retry loops that can
+  hide failures.
+- Fee and commission formulas are embedded directly in the source.
+- The code has no automated tests, CI/CD, pre-commit checks, or type checking.
+- `DataFrame.append`, used by the project, was removed in pandas 2.0.
+- The tracked spreadsheets contain historical product and price data and are
+  examples rather than a stable input or output contract.
 
-A few additional functions.
+## Status
 
-## main.py
-
-It brings the whole program together. Calls classes based on data in stock.xlsx and writes prices to prices.xlsx.
-
-## INCOMING
-
-1. Repair wethenew
-2. Best sizes based on price (will compare to StockX and Alias)
-3. StockX rewrite
-4. Whole program rewrite
+Archived in spirit: no support, fixes, or compatibility updates are planned.

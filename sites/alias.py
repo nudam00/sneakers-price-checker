@@ -1,5 +1,11 @@
 import time
 import json
+import os
+
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 class Alias:
@@ -11,10 +17,10 @@ class Alias:
             "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "pl-PL,pl;q=0.9",
             "User-Agent": "alias/1.20.1 (iPhone; iOS 16.2; Scale/3.00) Locale/en",
-            "x-emb-id": "2389040D96C04834A761C65276AC5564",
+            "x-emb-id": os.getenv("ALIAS_EMBEDDED_ID", ""),
             "x-emb-st": str(int(time.time() * 1000)),
             "X-PX-AUTHORIZATION": "3",
-            "X-PX-ORIGINAL-TOKEN": "3:87ec12c5b4c34832b42e88735f4da9949538cc013cb7ac2c48d8504371518d81:tT/X5LIfW0h1Ymfegj0v4hZx9Oj13sLWXGbw2+PCtg96IiaUfvn0SG5e/GH+QJPIphQY4u6NziXV+nQypGVLhQ==:1000:f9OqYPvRS2ATdeQYm+cskkymJJlSpyDHB++F566kPebKaJwCf2Y4nxse8wunIYMPytrJCPEOm6dZ8rD19SE/JpJH5cWswIgF7i2DQvMEyP+hVIDae1eUTuZViSvGiPlf2hjvkc8kAUbVDx4I72mqHCx6jzH1+F/2qsnWjdxL5lu7s/b+sdA035/eOeXBihKOcOTT08GYQ1EAkgqiFTMQPg==",
+            "X-PX-ORIGINAL-TOKEN": os.getenv("ALIAS_PX_TOKEN", ""),
             "Connection": "keep-alive",
             "Host": "sell-api.goat.com",
             "Authorization": "Bearer {}".format(access),
@@ -33,10 +39,10 @@ class Alias:
             "Accept-Encoding": "br;q=1.0, gzip;q=0.9, deflate;q=0.8",
             "Accept-Language": "pl-PL;q=1.0, en-PL;q=0.9",
             "User-Agent": "alias/1.20.1 (com.goat.OneSell.ios; build:763; iOS 16.2.0) Alamofire/5.6.2",
-            "x-emb-id": "2389040D96C04834A761C65276AC5564",
+            "x-emb-id": os.getenv("ALIAS_EMBEDDED_ID", ""),
             "x-emb-st": str(int(time.time() * 1000)),
-            "X-Algolia-API-Key": "838ecd564b6aedc176ff73b67087ff43",
-            "X-Algolia-Application-Id": "2FWOTDVM2O",
+            "X-Algolia-API-Key": os.getenv("ALIAS_ALGOLIA_API_KEY", ""),
+            "X-Algolia-Application-Id": os.getenv("ALIAS_ALGOLIA_APP_ID", ""),
             "Connection": "keep-alive",
             "Host": "2fwotdvm2o-dsn.algolia.net",
         }

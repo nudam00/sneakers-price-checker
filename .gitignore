@@ -1,2 +1,12 @@
-__pycache__
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+venv/
+.env
+.idea/
+.vscode/
+~$*.xlsx
+
+# Contains marketplace credentials.
 /input/settings.json

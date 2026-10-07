@@ -1,3 +1,5 @@
+import os
+
 import requests
 from bs4 import BeautifulSoup
 from lxml import etree
@@ -7,7 +9,10 @@ from datetime import datetime
 import json
 import cloudscraper
 import time
-import time
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 def get_playwright(email, passw, page):
@@ -88,10 +93,10 @@ def get_scraper(username, password):
         "Accept-Encoding": "gzip, deflate, br",
         "Accept-Language": "pl-PL,pl;q=0.9",
         "User-Agent": "alias/1.20.1 (iPhone; iOS 16.2; Scale/3.00) Locale/en",
-        "x-emb-id": "2389040D96C04834A761C65276AC5564",
+        "x-emb-id": os.getenv("ALIAS_EMBEDDED_ID", ""),
         "x-emb-st": str(int(time.time() * 1000)),
         "X-PX-AUTHORIZATION": "3",
-        "X-PX-ORIGINAL-TOKEN": "3:87ec12c5b4c34832b42e88735f4da9949538cc013cb7ac2c48d8504371518d81:tT/X5LIfW0h1Ymfegj0v4hZx9Oj13sLWXGbw2+PCtg96IiaUfvn0SG5e/GH+QJPIphQY4u6NziXV+nQypGVLhQ==:1000:f9OqYPvRS2ATdeQYm+cskkymJJlSpyDHB++F566kPebKaJwCf2Y4nxse8wunIYMPytrJCPEOm6dZ8rD19SE/JpJH5cWswIgF7i2DQvMEyP+hVIDae1eUTuZViSvGiPlf2hjvkc8kAUbVDx4I72mqHCx6jzH1+F/2qsnWjdxL5lu7s/b+sdA035/eOeXBihKOcOTT08GYQ1EAkgqiFTMQPg==",
+        "X-PX-ORIGINAL-TOKEN": os.getenv("ALIAS_PX_TOKEN", ""),
         "Connection": "keep-alive",
         "Host": "sell-api.goat.com",
     }
